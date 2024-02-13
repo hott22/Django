@@ -13,9 +13,7 @@ class ClientModel(models.Model):
     date_registration = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'Клиент: имя: {self.name}, email: {self.email}, номер телефона: {self.phone_number}, ' \
-               f'адрес проживания: ' \
-               f'{self.address}, дата регистрации: {self.date_registration}'
+        return f'Клиент: id:{self.pk} имя: {self.name}, номер телефона: {self.phone_number}'
 
 
 class ProductModel(models.Model):
@@ -32,13 +30,13 @@ class ProductModel(models.Model):
 
 class OrderModel(models.Model):
     client = models.ForeignKey(ClientModel, on_delete=models.CASCADE)
-    product = models.ManyToManyField(ProductModel)
+    product = models.ManyToManyField(ProductModel, related_name='comments')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    registration_date = models.DateField(auto_now_add=True)
+    registration_date = models.DateField()
 
     def __str__(self):
-        return f'Заказ: {self.client}, продукт: {self.product}, общая сумма заказа: {self.total_amount}, ' \
-               f'дата регистрации: {self.registration_date}'
+        return f'Заказ: {self.client}, продукт: {self.product}, общая сумма заказа:' \
+               f' {self.total_amount}\n'
 
 
 

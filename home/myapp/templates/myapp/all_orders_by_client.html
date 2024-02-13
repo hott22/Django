@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}: {{ client.name|title }}{% endblock %}
+
+{% block content %}
+    {% if orders|length != 0 %}
+        {% for order in orders %}
+            <h1>Заказ от {{ order.registration_date }} на сумму {{ order.total_amount }}</h1>
+            <h2>Список товаров:</h2>
+            <ol>
+                {% for product in order.product.all %}
+                    <li>{{ product.title }}</li>
+                {% endfor %}
+            </ol>
+
+        {% endfor %}
+    {% else %}
+        <h2>Клиент {{ client.name|title }} не делал заказы.</h2>
+    {% endif %}
+
+{% endblock %}
