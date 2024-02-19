@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Сортровка: {{ client.name|title }}{% endblock %}
+
+{% block content %}
+    <span style="color: red; "><h1 class="header"
+                                   color="red">Заказы клиента: {{ client.name|title }}.</h1></span>
+    <h2>Список продуктов на неделю: </h2>
+        <ol>
+            {%  for product in week %}
+                <li>{{ product.title }}</li>
+            {% endfor %}
+        </ol>
+    <h2>Список продуктов за месяц: </h2>
+        <ol>
+            {%  for product in month %}
+                <li>{{ product.title }}</li>
+            {% endfor %}
+        </ol>
+    <h2>Список продуктов за год: </h2>
+        <ol>
+            {%  for product in year %}
+                <li>{{ product.title }}</li>
+            {% endfor %}
+        </ol>
+
+{% endblock %}
