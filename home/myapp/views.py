@@ -1,9 +1,12 @@
 import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils.lorem_ipsum import paragraphs, words
 import logging
+
+from myapp.forms import ProductForm
 from myapp.models import ClientModel, ProductModel, OrderModel
 
 LOGGER = logging.getLogger(__name__)
@@ -34,8 +37,8 @@ def all_orders_client_sort(request, client_id: int):
     orders_month = OrderModel.objects.filter(client=client).filter(registration_date__gt=datetime.date.today() -
                                                                                          datetime.timedelta(weeks=4))
     orders_year = OrderModel.objects.filter(client=client).filter(registration_date__gt=datetime.date.today() -
-                                                                                 datetime.timedelta(weeks=51))
-    print(orders_month)
+                                                                                        datetime.timedelta(weeks=51))
+
     week = set()
     month = set()
     year = set()
@@ -52,3 +55,20 @@ def all_orders_client_sort(request, client_id: int):
             year.add(product)
     context = {'week': week, 'month': month, 'year': year, 'client': client}
     return render(request, 'myapp/all_orders_client_sort.html', context)
+
+
+def product_add(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save()
+            title = 'Продукт'
+            return redirect(f'/product/{product.pk}/', {'title': title})
+    else:
+        form = ProductForm()
+    return render(request, 'myapp/product_add.html', {'form': form})
+
+
+def product_view(request, product_id: int):
+    product = get_object_or_404(ProductModel, pk=product_id)
+    return render(request, 'myapp/product.html', {'product': product})
